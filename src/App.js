@@ -1,128 +1,112 @@
-import React, { useState } from "react";
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import './App.css'; // Import external CSS file
 
-function App() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    degree: "",
-    collegeName: "",
-    contactNo: "",
-    firstEvent: "",
-    secondEvent: "",
-  });
+const LoginPage = () => {
+  // State hooks for handling form inputs and error messages
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [popupVisible, setPopupVisible] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  // Function to handle form validation and login
+  const validateLogin = (e) => {
+    e.preventDefault();
+    if (username === 'Techxadmin' && password === 'techx@24') {
+      setErrorMessage('Login successful!');
+      setPopupVisible(false);  // Hide popup if login is successful
+      // Redirect to another page (you can replace this with a React Router redirect if using react-router)
+      window.location.href = "desk.html";  
+    } else {
+      setErrorMessage('Invalid username or password.');
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-    alert("Registration Successful!");
+  // Function to handle the popup visibility
+  const handleLostPasswordClick = () => {
+    setPopupVisible(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+    setPopupVisible(false);
+  };
+
+  // Function to copy text to clipboard
+  const copyText = (textId, buttonId) => {
+    const copyText = document.getElementById(textId).textContent;
+    const textArea = document.createElement('textarea');
+    textArea.value = copyText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+
+    const copyButton = document.getElementById(buttonId);
+    copyButton.textContent = 'Copied';
+    setTimeout(() => {
+      copyButton.textContent = 'Copy';
+    }, 1000);
   };
 
   return (
-    <div className="App">
-      <h2>Registration Form</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
+    <div className="body">
+      <div className="container">
+      
+        <h2>TECHX ADMIN LOGIN</h2>
+        <form onSubmit={validateLogin}>
+          <label htmlFor="uname">Username:</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            id="uname"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
+            className="input"
           />
-        </div>
-
-        <div>
-          <label>Email:</label>
+          <label htmlFor="psw">Password:</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            type="password"
+            id="psw"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
+            className="input"
           />
-        </div>
+          <button type="submit" className="button">Log In</button>
+          {errorMessage && <p className="error">{errorMessage}</p>}
+        </form>
+        <p><a href="#" onClick={handleLostPasswordClick} className="link">Lost password?</a></p>
+      </div>
 
-        <div>
-          <label>Degree:</label>
-          <select
-            name="degree"
-            value={formData.degree}
-            onChange={handleChange}
-            required
+      {popupVisible && (
+        <div className="popup">
+          <span className="closeBtn" onClick={closePopup}>X</span>
+          <h3>Contact Support</h3>
+          <p><strong>Manoj:</strong></p>
+          <p id="manoj-number">8825863892</p>
+          <button
+            id="copy-manoj"
+            onClick={() => copyText('manoj-number', 'copy-manoj')}
+            className="copyBtn"
           >
-            <option value="ud">Undergraduate (UG)</option>
-            <option value="pg">Postgraduate (PG)</option>
-          </select>
-        </div>
+            Copy
+          </button>
 
-        <div>
-          <label>College Name:</label>
-          <input
-            type="text"
-            name="collegeName"
-            value={formData.collegeName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Contact No:</label>
-          <input
-            type="text"
-            name="contactNo"
-            value={formData.contactNo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>TECHNICAL EVENTS:</label>
-          <select
-            name="firstEvent"
-            value={formData.firstEvent}
-            onChange={handleChange}
-            required
+          <p><strong>Honey Joe:</strong></p>
+          <p id="honey-number">6382503265</p>
+          <button
+            id="copy-honey"
+            onClick={() => copyText('honey-number', 'copy-honey')}
+            className="copyBtn"
           >
-            <option value="">Select an event</option>
-            <option value="event1">CODE CRACK(DEBUGGING)</option>
-            <option value="event2">WEB MAESTRO(WEB DESIGN)</option>
-            <option value="event3">QUIZ QUEST(QUIZ)</option>
-            <option value="event4">INNOVEXHIBIT(IDEA PRESENTATION)</option>
-          </select>
+            Copy
+          </button>
         </div>
-
-        <div>
-          <label>NON-TECHNICAL EVENTS:</label>
-          <select
-            name="secondEvent"
-            value={formData.secondEvent}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select an event</option>
-            <option value="event1">QUIET QUEST(DUMB CHARADES)</option>
-            <option value="event2">TECH LINK(CONNECTION)</option>
-            <option value="event3">BRAND BLAST(AD-ZAP)</option>
-            <option value="event4">DESIGN DAZZLE(POSTER MAKING)</option>
-          </select>
-        </div>
-
-        <button type="submit">Register</button>
-      </form>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default LoginPage;
+
